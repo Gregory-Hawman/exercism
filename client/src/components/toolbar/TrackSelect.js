@@ -1,10 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function TrackSelect(props) {
   const [dropped, setDropped] = useState(false);
   const [selected, setSelected] = useState('All');
-  // const [count, setCount] = useState<number>(1)
+  const [tracksData, setTracksData] = useState({})
 
+  useEffect(() => {
+    // TRACKS
+    axios
+    .get('https://exercism.org/api/v2/tracks')
+    .then((response) => {
+      setTracksData(response.data)
+    })
+    .catch(error => {
+      console.log('Error:', error);
+    });
+  }, []);
+
+  function buildTracks () {
+    let newTracksData = []
+    let trackList = tracksData.tracks
+    let tracks = props.testimonialData.tracks
+    let count = props.testimonialData.track_counts
+
+    let icon_urls = []
+
+    for (let i = 0; i < tracks.length; i++){
+      for (let j = 0; j < trackList.length; j++){
+        if (tracks[i] === trackList[j].slug){
+          icon_urls.push(trackList[j].icon_url)
+        }
+      }
+
+      let track = tracks[i]
+      let capTrack = track.charAt(0).toUpperCase() + track.slice(1)
+      let newTrack = {
+        id: i,
+        track: capTrack,
+        count: count[track],
+        icon_url: icon_urls[i]
+      }
+      newTracksData.push(newTrack)
+    }
+    return newTracksData
+  }
+  
   const handleDrop = () => {
     setDropped(!dropped);
   }
@@ -42,24 +83,27 @@ export default function TrackSelect(props) {
       </div>
 
       {dropped ?
-      {/* <form>
+      <form>
         <div className='track-drop-radio flex flex-col absolute bg-white w-[22rem] rounded-md my-2 mx-[-1rem] shadow-all'>
             <div className='my-2'>
-              {newTrackList.map((track) => {
+              {buildTracks().map((track) => {
                 console.log('TRACK: ', track)
                 return (
-                  <div key={track.id}>
-                    <div>
-                      
+                  <div key={track.id} className='flex justify-between'>
+                    <div className='flex'>
+                      <img src={track.icon_url} alt='icon url' />
+                      <p>{track.track}</p>
                     </div>
-                    {track}
+                    <div>
+                      {track.count}
+                    </div>
                   </div>
                 )
               })}
             </div>
         </div>
 
-      </form> */}
+      </form>
         :
         null
       }
