@@ -8,32 +8,31 @@ function App() {
 
   // set by api call
   const [testimonialData, setTestimonialData] = useState({})
-  const [tracksData, setTracksData] = useState([])
-  // const [testimonialResults, setTestimonialResults] = useState([])
-  // const [testimonialPage, setTestimonialPage] = useState({})
-  // const [testimonialTracks, setTestimonialTracks] = useState([])
-  // const [testimonialCount, setTestimonialCount] = useState({})
+  const [totalCount, setTotalCount] = useState(0)
 
   // needed to change api call
-  const [currentTrack, setCurrentTrack] = useState('');
+  const [currentTrack, setCurrentTrack] = useState({
+    track: 'All',
+    first: true
+  });
   const [currentExercise, setCurrentExercise] = useState('');
   const [order, setOrder] = useState('newest_first');
   const [currentPage, setCurrentPage] = useState(1);
   
   useEffect(() => {
     // TESTIMONIALS
-    if (currentTrack !== '' && currentExercise !== '') {
+    if (currentTrack.track !== '' && currentTrack.track !== 'All' && currentExercise !== '') {
       axios
-        .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&track=${currentTrack}&exercise=${currentExercise}&order=${order}`)
+        .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&track=${currentTrack.track}&exercise=${currentExercise}&order=${order}`)
         .then((response) => {
           setTestimonialData(response.data.testimonials)
         })
         .catch(error => {
           console.log('Error:', error);
         });
-    } else if (currentTrack !== '') {
+    } else if (currentTrack.track !== '' && currentTrack.track !== 'All' ) {
       axios
-      .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&track=${currentTrack}&order=${order}`)
+      .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&track=${currentTrack.track}&order=${order}`)
       .then((response) => {
         setTestimonialData(response.data.testimonials)
       })
@@ -54,6 +53,7 @@ function App() {
         .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&order=${order}`)
         .then((response) => {
           setTestimonialData(response.data.testimonials)
+          setTotalCount(response.data.testimonials.pagination.total_count)
         })
         .catch(error => {
           console.log('Error:', error);
@@ -83,6 +83,7 @@ function App() {
         setOrder={setOrder}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
+        totalCount={totalCount}
       />
     </div>
   );

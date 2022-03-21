@@ -1,6 +1,5 @@
 import React from 'react';
 import moment from 'moment';
-import { CgProfile } from 'react-icons/cg';
 
 export default function TestimonialCard(props) {
   const timeAgo = moment(props.testimonial.created_at).fromNow()
@@ -17,8 +16,8 @@ export default function TestimonialCard(props) {
 
           {/* ProfilePic */}
           <div>
-            {/* <img src={testimonial.mentor.avatar_url} alt='avatar img'/> */}
-            <CgProfile size='30' className='mt-2 ml-1 mr-3'/>
+            <img src={props.testimonial.mentor.avatar_url} alt='avatar img' className='w-10 rounded-[50%] mt-2 ml-1 mr-3'/>
+            {/* <CgProfile size='30' className='mt-2 ml-1 mr-3'/> */}
           </div>
 
           <div>

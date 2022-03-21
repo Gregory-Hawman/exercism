@@ -16,6 +16,7 @@ export default function Testimonials(props) {
         setCurrentExercise={props.setCurrentExercise}
         order={props.order}
         setOrder={props.setOrder}
+        totalCount={props.totalCount}
       />
       <TestimonialList 
         testimonialData={props.testimonialData}

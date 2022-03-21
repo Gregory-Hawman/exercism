@@ -15,6 +15,7 @@ export default function Toolbar(props) {
           tracksData={props.tracksData}
           currentTrack={props.currentTrack}
           setCurrentTrack={props.setCurrentTrack}
+          totalCount={props.totalCount}
         />
         <Filter
           currentExercise={props.currentExercise}
