@@ -6,7 +6,7 @@ export default function TestimonialCard(props) {
 
   return (
     <div className="flex justify-between px-1 py-2 hover:bg-[#F4F7FD] border-b-2 border-[#EAECF3]">
-      <div className="flex w-[85%]">
+      <div className="flex w-[80%]">
         <div className="flex w-[35%] my-auto">
 
           {/* Track Icon */}
@@ -43,7 +43,7 @@ export default function TestimonialCard(props) {
       
       <div className='flex my-auto'>
         {/* When */}
-        <div className='my-auto mr-10'>
+        <div className='my-auto mr-8 w-[8rem]'>
           <p>{timeAgo}</p>
         </div>
 

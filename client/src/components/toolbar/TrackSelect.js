@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import AllTracksLogo from '../SVGs/TracksLogo';
 
@@ -68,7 +68,6 @@ export default function TrackSelect(props) {
 
   const handleChange = (e) => {
     e.preventDefault();
-    console.log(e.currentTarget)
 
     props.setCurrentTrack({
       track: e.currentTarget.value,
@@ -76,6 +75,19 @@ export default function TrackSelect(props) {
     })
     setDropped(!dropped);
   }
+
+  const dropRef = useRef(null);
+  useEffect(() => {
+    function clickOutside(e) {
+      if (dropRef.current && !dropRef.current.contains(e.target)) {
+        setDropped(!dropped)
+      }
+    }
+    document.addEventListener('mousedown', clickOutside);
+    return () => {
+      document.removeEventListener('mousedown', clickOutside);
+    };
+  }, [dropRef, dropped]);
 
   return (
     <div>
@@ -98,7 +110,7 @@ export default function TrackSelect(props) {
       }
 
       {dropped ?
-        <div className='track-drop-radio flex flex-col absolute bg-white w-[22rem] rounded-md my-2 mx-[-1rem] shadow-all h-[20rem] overflow-y-scroll'>
+        <div ref={dropRef} className='track-drop-radio flex flex-col absolute bg-white w-[22rem] rounded-md my-2 mx-[-1rem] shadow-all h-[20rem] overflow-y-scroll'>
           <div className='my-2'>
             {buildTracks().map((track) => {
               return (
@@ -111,7 +123,7 @@ export default function TrackSelect(props) {
                   >
                     <div className='flex'>
                       <div className='border-[1px] border-[#3F3A5A] mx-4 w-4 h-4 rounded-[50%] my-auto'>
-                        <div className={props.currentTrack.track === track.track ? 'bg-[#3F3A5A] mt-[.25rem] mx-auto w-[.5rem] h-[.5rem] rounded-[50%]' : null}></div>
+                        <div className={props.currentTrack.track === track.track ? 'bg-[#3F3A5A] mt-[.175rem] mx-auto w-[.5rem] h-[.5rem] rounded-[50%]' : null}></div>
                       </div>
                       <div className='my-auto mr-4 w-12'>
                         {track.first ? 
