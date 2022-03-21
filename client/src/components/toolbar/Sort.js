@@ -34,14 +34,12 @@ export default function Sort(props) {
   }
 
   const dropRef = useRef(null);
-  
   useEffect(() => {
     function clickOutside(e) {
       if (dropRef.current && !dropRef.current.contains(e.target)) {
         setDropped(!dropped)
       }
     }
-
     document.addEventListener('mousedown', clickOutside);
     return () => {
       document.removeEventListener('mousedown', clickOutside);
@@ -61,13 +59,13 @@ export default function Sort(props) {
           <div className="m-2">
             {sortList.map((option) => {
               return(
-                <div key={sortList.id} className={selected.title === option.title ? 'bg-[#F0F3F9] hover:bg-slate-200 rounded-md p-3' : 'hover:bg-slate-200 rounded-md p-3'}>
+                <div key={sortList.id} className={selected.title === option.title ? 'bg-[#F0F3F9] hover:bg-slate-200 rounded-md' : 'hover:bg-slate-200 rounded-md'}>
                   <button
                     type="button"
                     value={option.param}
                     title={option.title}
                     onClick={handleClick}
-                    className="w-full"
+                    className="w-full p-3"
                   >
                     {option.title}
                   </button>
