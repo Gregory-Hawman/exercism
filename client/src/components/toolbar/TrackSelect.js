@@ -5,6 +5,10 @@ import AllTracksLogo from '../SVGs/TracksLogo';
 export default function TrackSelect(props) {
   const [dropped, setDropped] = useState(false);
   const [tracksData, setTracksData] = useState({})
+  const [newCounts, setNewCounts] = useState([])
+
+  let trackList = tracksData.tracks
+  let tracks = props.testimonialData.tracks
 
   // TRACKS
   useEffect(() => {
@@ -17,12 +21,41 @@ export default function TrackSelect(props) {
       console.log('Error:', error);
     });
   }, []);
+
+  console.log(props.currentExercise)
   
+  // New Counts for exercises
+  useEffect(() => {
+    if (tracks === undefined) {
+      return
+    } else {
+      for (let i = 0; i < tracks.length; i++) {
+        let track = tracks[i]
+        if (props.currentExercise !== '') {
+          axios
+            .get(`https://exercism.org/api/v2/hiring/testimonials?track=${track}&exercise=${props.currentExercise}`)
+            .then((response) => {
+              let newCount = {
+                title: track,
+                count: response.data.testimonials.pagination.total_count
+              }
+            
+              setNewCounts(arr => [...arr, newCount])
+            })
+            .catch((error) => {
+              console.log('Error:', error);
+            })
+        }
+      }
+    }
+  },[tracks, props.currentExercise]);
+  
+  let cache = {}
+  for (let i = 0; i < newCounts.length; i++){
+      cache[newCounts[i].title] = newCounts[i].count
+  }
 
-  let trackList = tracksData.tracks
-  let tracks = props.testimonialData.tracks
-  let count = props.testimonialData.track_counts
-
+  // Pulling the icon_url for the current Track and using that url for the dropdown image.
   function getIconURL() {
       for (let i = 0; i < trackList.length; i++){
         if (props.currentTrack.track === trackList[i].slug){
@@ -31,7 +64,9 @@ export default function TrackSelect(props) {
       }
   }
 
+  // Building list of tracks with all needed data easily available
   function buildTracks () {
+    // New List with starter data for "All" Tracks and how the data is structured
     let newTracksData = [{
       id: 999,
       track: 'All',
@@ -40,25 +75,53 @@ export default function TrackSelect(props) {
       first: true
     }]
 
+    // Building a list of icon_urls for the dropdown list
     let icon_urls = []
 
+    // for every track we are looping through the tracks to get...
     for (let i = 0; i < tracks.length; i++){
+      // icon_url
       for (let j = 0; j < trackList.length; j++){
         if (tracks[i] === trackList[j].slug){
           icon_urls.push(trackList[j].icon_url)
         }
       }
 
+      // track name
       let track = tracks[i]
+      console.log('TRACK', track)
+      // count
+      let count
+      // if their is no exercise it is just all the the total track counts
+      if (props.currentExercise === ''){
+        count = props.testimonialData.track_counts[track]
+      // else we need to do a bit more...
+      } 
+      for (let key in cache) {
+        console.log('key =', key, ', ', 'track =', track)
+        if (key === track) {
+          console.log('MATCH', key, track)
+          count = cache[key]
+        }
+      }
+
       let newTrack = {
         id: i,
         track: track,
-        count: count[track],
+        count: count,
         icon_url: icon_urls[i],
         first: false
       }
+      console.log(newTrack)
+
+      // if there is no count of testimonials then skip this track
+      if(newTrack.count === 0){
+        continue
+      }
+      // else add it to the list
       newTracksData.push(newTrack)
     }
+
     return newTracksData
   }
   

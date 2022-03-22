@@ -28,9 +28,6 @@ export default function Filter(props) {
     }
   };
 
-  console.log('INPUT', input)
-  console.log('FILTER', props.currentExercise)
-
   const clickRef = useRef(null);
   useEffect(() => {
     function clickOutside(e) {

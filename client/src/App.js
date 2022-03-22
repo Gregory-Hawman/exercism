@@ -21,16 +21,17 @@ function App() {
   
   useEffect(() => {
     // TESTIMONIALS
-    if (currentTrack.track !== '' && currentTrack.track !== 'All' && currentExercise !== '') {
+    if (currentTrack.track !== 'All' && currentExercise !== '') {
       axios
         .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&track=${currentTrack.track}&exercise=${currentExercise}&order=${order}`)
         .then((response) => {
           setTestimonialData(response.data.testimonials)
+          setTotalCount(response.data.testimonials.pagination.total_count)
         })
         .catch(error => {
           console.log('Error:', error);
         });
-    } else if (currentTrack.track !== '' && currentTrack.track !== 'All' ) {
+    } else if (currentTrack.track !== 'All' ) {
       axios
       .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&track=${currentTrack.track}&order=${order}`)
       .then((response) => {
@@ -44,6 +45,7 @@ function App() {
       .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&exercise=${currentExercise}&order=${order}`)
       .then((response) => {
         setTestimonialData(response.data.testimonials)
+        setTotalCount(response.data.testimonials.pagination.total_count)
       })
       .catch(error => {
         console.log('Error:', error);

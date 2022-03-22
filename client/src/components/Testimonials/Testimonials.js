@@ -17,6 +17,7 @@ export default function Testimonials(props) {
         order={props.order}
         setOrder={props.setOrder}
         totalCount={props.totalCount}
+        currentPage={props.currentPage}
       />
       <TestimonialList 
         testimonialData={props.testimonialData}

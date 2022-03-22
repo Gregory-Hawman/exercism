@@ -14,8 +14,11 @@ export default function Toolbar(props) {
           testimonialData={props.testimonialData}
           tracksData={props.tracksData}
           currentTrack={props.currentTrack}
+          currentExercise={props.currentExercise}
           setCurrentTrack={props.setCurrentTrack}
           totalCount={props.totalCount}
+          currentPage={props.currentPage}
+          order={props.order}
         />
         <Filter
           currentExercise={props.currentExercise}
