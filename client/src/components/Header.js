@@ -13,7 +13,12 @@ export default function Header(props) {
             <path d="M38.125 28.9375C37.8834 28.9375 37.6875 29.1334 37.6875 29.375C37.6875 29.6166 37.8834 29.8125 38.125 29.8125C38.3666 29.8125 38.5625 29.6166 38.5625 29.375C38.5625 29.1334 38.3666 28.9375 38.125 28.9375" stroke="#130B43" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
-        <h1 className='font-sans font-bold text-2xl flex justify-center content-center'>Testimonials I've left</h1>
+        <div className='flex items-center mx-auto'>
+          <h1 className='font-sans font-bold text-2xl flex justify-center content-center ml-10 mr-4'>Testimonials I've left</h1>
+          <div className='text-[#5C5589] border-[1px] border-[#c9c9c9] rounded-[25px] px-3 py-[.125rem]'>
+            {props.testimonialData.pagination === undefined ? null : props.testimonialData.pagination.total_count}
+          </div>
+        </div>
         <div className="w-20 mx-auto my-2">
           <svg width="78" height="20" viewBox="0 0 78 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1.79999 13L10.2 4L25.8 16L39 4.9L52.8 16L62.1 5.8L76.2 16" stroke="#130B43" strokeWidth="3"/>

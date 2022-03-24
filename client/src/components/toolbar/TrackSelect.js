@@ -2,13 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import AllTracksLogo from '../SVGs/TracksLogo';
 
-export default function TrackSelect(props) {
+export default function TrackSelect({testimonialData, currentTrack, setCurrentTrack, currentExercise, newCounts}) {
   const [dropped, setDropped] = useState(false);
-  const [tracksData, setTracksData] = useState({})
-  const [newCounts, setNewCounts] = useState([])
+  const [tracksData, setTracksData] = useState({});
 
   let trackList = tracksData.tracks
-  let tracks = props.testimonialData.tracks
+  let tracks = testimonialData.tracks
 
   // TRACKS
   useEffect(() => {
@@ -22,43 +21,26 @@ export default function TrackSelect(props) {
     });
   }, []);
 
-  console.log(props.currentExercise)
-  
-  // New Counts for exercises
-  useEffect(() => {
-    if (tracks === undefined) {
-      return
-    } else {
-      for (let i = 0; i < tracks.length; i++) {
-        let track = tracks[i]
-        if (props.currentExercise !== '') {
-          axios
-            .get(`https://exercism.org/api/v2/hiring/testimonials?track=${track}&exercise=${props.currentExercise}`)
-            .then((response) => {
-              let newCount = {
-                title: track,
-                count: response.data.testimonials.pagination.total_count
-              }
-            
-              setNewCounts(arr => [...arr, newCount])
-            })
-            .catch((error) => {
-              console.log('Error:', error);
-            })
-        }
-      }
-    }
-  },[tracks, props.currentExercise]);
-  
+
   let cache = {}
   for (let i = 0; i < newCounts.length; i++){
       cache[newCounts[i].title] = newCounts[i].count
+  }
+  
+  function getTotal() {
+    let sum = 0
+    for (let i in cache){
+      if (cache.hasOwnProperty(i)){
+        sum += cache[i]
+      }
+    }
+    return sum
   }
 
   // Pulling the icon_url for the current Track and using that url for the dropdown image.
   function getIconURL() {
       for (let i = 0; i < trackList.length; i++){
-        if (props.currentTrack.track === trackList[i].slug){
+        if (currentTrack.track === trackList[i].slug){
           return trackList[i].icon_url
         }
       }
@@ -66,11 +48,18 @@ export default function TrackSelect(props) {
 
   // Building list of tracks with all needed data easily available
   function buildTracks () {
+    // So all in the tracks dropdown is always showing the total of each track
+    let total
+    if (currentExercise === ''){
+      total = testimonialData.pagination.total_count
+    } else {
+      total = getTotal()
+    }
     // New List with starter data for "All" Tracks and how the data is structured
     let newTracksData = [{
       id: 999,
       track: 'All',
-      count: props.totalCount,
+      count: total,
       icon_url: AllTracksLogo,
       first: true
     }]
@@ -89,18 +78,17 @@ export default function TrackSelect(props) {
 
       // track name
       let track = tracks[i]
-      console.log('TRACK', track)
       // count
       let count
       // if their is no exercise it is just all the the total track counts
-      if (props.currentExercise === ''){
-        count = props.testimonialData.track_counts[track]
+      if (currentExercise === ''){
+        count = testimonialData.track_counts[track]
       // else we need to do a bit more...
       } 
       for (let key in cache) {
-        console.log('key =', key, ', ', 'track =', track)
+        // console.log('key =', key, ', ', 'track =', track)
         if (key === track) {
-          console.log('MATCH', key, track)
+          // console.log('MATCH', key, track)
           count = cache[key]
         }
       }
@@ -112,7 +100,7 @@ export default function TrackSelect(props) {
         icon_url: icon_urls[i],
         first: false
       }
-      console.log(newTrack)
+      // console.log(newTrack)
 
       // if there is no count of testimonials then skip this track
       if(newTrack.count === 0){
@@ -132,7 +120,7 @@ export default function TrackSelect(props) {
   const handleChange = (e) => {
     e.preventDefault();
 
-    props.setCurrentTrack({
+    setCurrentTrack({
       track: e.currentTarget.value,
       first: e.currentTarget.value === 'All' ? true : false
     })
@@ -153,8 +141,8 @@ export default function TrackSelect(props) {
   }, [dropRef, dropped]);
 
   return (
-    <div>
-      {props.currentTrack.first ? 
+    <div className="cursor-pointer">
+      {currentTrack.first ? 
         <div className="track-drop flex justify-center content-center" onClick={handleDrop}>
           {AllTracksLogo()} 
 
@@ -164,7 +152,7 @@ export default function TrackSelect(props) {
         </div>
         :
         <div className="track-drop flex justify-center content-center" onClick={handleDrop}>
-          <img src={getIconURL()} alt={props.currentTrack.track} className='w-12'/>
+          <img src={getIconURL()} alt={currentTrack.track} className='w-12'/>
 
           <svg width="15" height="15" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg" className='ml-2 mr-4 my-auto'>
             <path d="M13.5938 3.96012L7.78708 9.76625C7.71098 9.84246 7.6077 9.88528 7.5 9.88528C7.3923 9.88528 7.28902 9.84246 7.21292 9.76625L1.40625 3.96012" stroke="#5C5589" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -177,7 +165,7 @@ export default function TrackSelect(props) {
           <div className='my-2'>
             {buildTracks().map((track) => {
               return (
-                <div key={track.id} className={props.currentTrack.track === track.track ? 'bg-[#F0F3F9] flex justify-between content-center my-auto mx-2 rounded-md py-2 hover:bg-slate-200 cursor-pointer' : 'flex justify-between content-center my-auto mx-2 rounded-md py-2 hover:bg-slate-200 cursor-pointer'}>
+                <div key={track.id} className={currentTrack.track === track.track ? 'bg-[#F0F3F9] flex justify-between content-center my-auto mx-2 rounded-md py-2 hover:bg-slate-200 cursor-pointer' : 'flex justify-between content-center my-auto mx-2 rounded-md py-2 hover:bg-slate-200 cursor-pointer'}>
                   <button
                     type='button'
                     value={track.track}
@@ -186,7 +174,7 @@ export default function TrackSelect(props) {
                   >
                     <div className='flex'>
                       <div className='border-[1px] border-[#3F3A5A] mx-4 w-4 h-4 rounded-[50%] my-auto'>
-                        <div className={props.currentTrack.track === track.track ? 'bg-[#3F3A5A] mt-[.175rem] mx-auto w-[.5rem] h-[.5rem] rounded-[50%]' : null}></div>
+                        <div className={currentTrack.track === track.track ? 'bg-[#3F3A5A] mt-[.175rem] mx-auto w-[.5rem] h-[.5rem] rounded-[50%]' : null}></div>
                       </div>
                       <div className='my-auto mr-4 w-12'>
                         {track.first ? 

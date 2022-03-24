@@ -3,34 +3,33 @@ import Toolbar from '../toolbar/Toolbar';
 import TestimonialList from './TestimonialList';
 import Pagination from './Pagination';
 
-export default function Testimonials(props) {
-  // console.log('PROPS DATA', props.testimonialData)
+export default function Testimonials({testimonialData, currentTrack, setCurrentTrack, currentExercise, setCurrentExercise, order, setOrder, currentPage, setCurrentPage, newCounts}) {
 
   return (
-    <div className="m-8 shadow-all rounded-sm">
+    <div className="m-8 shadow-all rounded-md">
       <Toolbar 
-        testimonialData={props.testimonialData}
-        currentTrack={props.currentTrack}
-        setCurrentTrack={props.setCurrentTrack}
-        currentExercise={props.currentExercise}
-        setCurrentExercise={props.setCurrentExercise}
-        order={props.order}
-        setOrder={props.setOrder}
-        totalCount={props.totalCount}
-        currentPage={props.currentPage}
+        testimonialData={testimonialData}
+        currentTrack={currentTrack}
+        setCurrentTrack={setCurrentTrack}
+        currentExercise={currentExercise}
+        setCurrentExercise={setCurrentExercise}
+        order={order}
+        setOrder={setOrder}
+        currentPage={currentPage}
+        newCounts={newCounts}
       />
       <TestimonialList 
-        testimonialData={props.testimonialData}
-        currentTrack={props.currentTrack}
-        currentExercise={props.currentExercise}
-        order={props.order}
-        currentPage={props.currentPage}
+        testimonialData={testimonialData}
+        currentTrack={currentTrack}
+        currentExercise={currentExercise}
+        order={order}
+        currentPage={currentPage}
 
       />
       <Pagination 
-        testimonialData={props.testimonialData}
-        currentPage={props.currentPage}
-        setCurrentPage={props.setCurrentPage}
+        testimonialData={testimonialData}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
     </div>
   )

@@ -12,6 +12,11 @@ export default function Filter(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (input === ''){
+      setActive(false);
+    } else {
+      setActive(true);
+    }
     props.setCurrentExercise(input);
     setInput('');
   };
@@ -42,30 +47,29 @@ export default function Filter(props) {
   }, [clickRef, active]);
   
   return (
-    <div ref={props.currentExercise === '' ? clickRef : null} className={active ? 'bg-white flex rounded-md w-96 border-2 border-[#2E57E8]' : 'bg-[#F0F3F9] flex rounded-sm w-96'} onClick={handleActive}>
+    <div ref={props.currentExercise === '' ? clickRef : null} className={active ? 'bg-white flex rounded-md w-96 border-2 border-[#2E57E8] cursor-pointer' : 'bg-[#F0F3F9] flex rounded-md w-96 cursor-pointer'} onClick={handleActive}>
       <form 
         className='flex' 
         onSubmit={handleSubmit}
       >
-        <AiOutlineSearch size='26' className={active ? 'my-auto ml-[.875rem] mr-4' : 'my-auto mx-4'}/>
+        <AiOutlineSearch size='26' className={active ? 'my-auto ml-[.875rem] mr-4 cursor-pointer' : 'my-auto mx-4 cursor-pointer'}/>
         <input
           type='text'
           name='filter'
-          className={active ? 'bg-white w-[16rem] outline-none cursor-pointer' : 'bg-[#F0F3F9] w-[16rem] outline-none cursor-pointer'}
-          placeholder={props.currentExercise !== '' ? `Filtered by  "${props.currentExercise}"` : 'Filter by exercise title'}
+          className={active ? 'bg-white w-[16rem] outline-none cursor-pointer autofill:bg-white' : 'bg-[#F0F3F9] w-[16rem] outline-none cursor-pointer autofill:bg-[#F0F3F9]'}
+          placeholder={props.currentExercise !== '' ? `"${props.currentExercise}"` : 'Filter by exercise title'}
           value={input}
           onChange={handleChange}
         />
+        
+      </form>
         {props.currentExercise !== '' ? 
           <div className='bg-[white] flex my-auto p-[.125rem] text-[.75rem] rounded-md'>
-            {/* <div className='ml-1 mr-3'>{props.currentExercise}</div> */}
             <button className='ml-10 mr-1 font-bold' onClick={handleClick}> X </button>
           </div>
           : 
           null
         }
-        
-      </form>
     </div>
   )
 };

@@ -48,7 +48,7 @@ export default function Sort(props) {
 
   return (
     <div>
-      <div className="sort-drop flex justify-between bg-[#F0F3F9] w-[22rem] p-3 cursor-pointer" onClick={handleDrop}>
+      <div className="sort-drop flex justify-between bg-[#F0F3F9] w-[22rem] p-3 cursor-pointer rounded-md" onClick={handleDrop}>
         {selected.title}
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className='mr-2'>
           <path d="M23.25 7.311L12.53 18.03C12.3895 18.1707 12.1988 18.2498 12 18.2498C11.8012 18.2498 11.6105 18.1707 11.47 18.03L0.75 7.311" stroke="#5C5589" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
