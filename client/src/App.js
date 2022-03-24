@@ -101,6 +101,8 @@ function App() {
     }
   },[testimonialData.tracks, currentExercise]);
 
+  console.log(testimonialData)
+
   return (
     <div>
       <Navbar />
