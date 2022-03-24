@@ -8,6 +8,8 @@ function App() {
   // set by api call
   const [testimonialData, setTestimonialData] = useState({})
   const [newCounts, setNewCounts] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [initialLoading, setInitialLoading] = useState(true)
 
   // needed to change api call
   const [currentTrack, setCurrentTrack] = useState({
@@ -20,6 +22,7 @@ function App() {
   
   useEffect(() => {
     // TESTIMONIALS
+    setLoading(true)
     if (currentTrack.track !== 'All' && currentExercise !== '') {
       axios
         .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&track=${currentTrack.track}&exercise=${currentExercise}&order=${order}`)
@@ -29,24 +32,36 @@ function App() {
         .catch(error => {
           console.log('Error:', error);
         });
+        setTimeout(() => {
+          setInitialLoading(false)
+          setLoading(false)
+        }, 1000)
     } else if (currentTrack.track !== 'All' ) {
       axios
-      .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&track=${currentTrack.track}&order=${order}`)
-      .then((response) => {
-        setTestimonialData(response.data.testimonials)
-      })
-      .catch(error => {
-        console.log('Error:', error);
-      });
+        .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&track=${currentTrack.track}&order=${order}`)
+        .then((response) => {
+          setTestimonialData(response.data.testimonials)
+        })
+        .catch(error => {
+          console.log('Error:', error);
+        });
+        setTimeout(() => {
+          setInitialLoading(false)
+          setLoading(false)
+        }, 1000)
     } else if (currentExercise !== '') {
       axios
-      .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&exercise=${currentExercise}&order=${order}`)
-      .then((response) => {
-        setTestimonialData(response.data.testimonials)
-      })
-      .catch(error => {
-        console.log('Error:', error);
-      });
+        .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&exercise=${currentExercise}&order=${order}`)
+        .then((response) => {
+          setTestimonialData(response.data.testimonials)
+        })
+        .catch(error => {
+          console.log('Error:', error);
+        });
+        setTimeout(() => {
+          setInitialLoading(false)
+          setLoading(false)
+        }, 1000)
     } else {
       axios
         .get(`https://exercism.org/api/v2/hiring/testimonials?page=${currentPage}&order=${order}`)
@@ -56,6 +71,10 @@ function App() {
         .catch(error => {
           console.log('Error:', error);
         });
+        setTimeout(() => {
+          setInitialLoading(false)
+          setLoading(false)
+        }, 1000)
     }
   }, [currentPage, order, currentTrack, currentExercise]);
 
@@ -99,6 +118,8 @@ function App() {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         newCounts={newCounts}
+        loading={loading}
+        initialLoading={initialLoading}
       />
     </div>
   );

@@ -1,9 +1,10 @@
 import React from 'react';
 import Toolbar from '../toolbar/Toolbar';
 import TestimonialList from './TestimonialList';
+import InitialLoading from '../Loading/InitialLoading';
 import Pagination from './Pagination';
 
-export default function Testimonials({testimonialData, currentTrack, setCurrentTrack, currentExercise, setCurrentExercise, order, setOrder, currentPage, setCurrentPage, newCounts}) {
+export default function Testimonials({testimonialData, currentTrack, setCurrentTrack, currentExercise, setCurrentExercise, order, setOrder, currentPage, setCurrentPage, newCounts, initialLoading, loading}) {
 
   return (
     <div className="m-8 shadow-all rounded-md">
@@ -18,14 +19,17 @@ export default function Testimonials({testimonialData, currentTrack, setCurrentT
         currentPage={currentPage}
         newCounts={newCounts}
       />
-      <TestimonialList 
-        testimonialData={testimonialData}
-        currentTrack={currentTrack}
-        currentExercise={currentExercise}
-        order={order}
-        currentPage={currentPage}
-
-      />
+      {initialLoading ?      
+        <InitialLoading 
+          initialLoading={initialLoading}
+          loading={loading}
+        />
+        :
+        <TestimonialList 
+          testimonialData={testimonialData}
+          loading={loading}
+        />
+      }
       <Pagination 
         testimonialData={testimonialData}
         currentPage={currentPage}
